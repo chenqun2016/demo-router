@@ -1,0 +1,12 @@
+//引用groovy插件,编译工程中的代码
+apply plugin: 'groovy'
+
+//声明仓库的地址,用来下载第三方包
+repositories {
+    jcenter()
+}
+//指定使用三分包
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+}
