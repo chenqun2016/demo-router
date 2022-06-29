@@ -1,5 +1,7 @@
-实现参数配置：
+gradle,实现参数配置：
 1，定义Extension : 如：RouterExtension
 2，注册Extension  :在 RouterPlugin 中 project.getExtensions().create("router",RouterExtension)
 3，使用Extension : build.gradle(app)  中 调用 router{ wikiDir = "" }
 4，获取Extension : 在 RouterPlugin 中的 project.afterEvaluate 中可以拿到对应的值
+
+发布插件到本地仓库

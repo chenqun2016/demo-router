@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'com.chenchen.router'
 }
-
+//配置自定义Extension
 router {
     wikiDir getRootDir().absolutePath
 }

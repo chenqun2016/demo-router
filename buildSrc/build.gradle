@@ -10,3 +10,21 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
 }
+
+//调用maven插件，用于发布
+apply plugin: 'maven'
+uploadArchives{
+    repositories {
+        mavenDeployer{
+            //设置发布路径为 工程根目录下面的 repo 文件夹
+            repository(url: uri("${rootProject.projectDir}/repo"))
+
+            //设置groupId，通常为包名
+            pom.groupId = 'com.chenchen.router'
+            //设置artifactId，插件的名称
+            pom.artifactId = "router-gradle-plugin"
+            //插件的版本号
+            pom.version = "1.0"
+        }
+    }
+}
