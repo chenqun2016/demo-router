@@ -4,6 +4,10 @@ plugins {
     id 'com.chenchen.router'
 }
 
+router {
+    wikiDir getRootDir().absolutePath
+}
+
 android {
     compileSdkVersion 29
 
