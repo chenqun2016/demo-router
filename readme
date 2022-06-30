@@ -1,7 +1,59 @@
-gradle,实现参数配置：
+页面路由开发功能：1，标记页面    2，收集页面  3，生成文档  4，注册映射  5，打开页面
+
+插件分为：脚本插件  和  二进制插件
+脚本插件开发流程：
+1，创建 *.gradle 文件 。比如项目中的：other.gradle
+2，使用：apply from: project.rootProject.file("other.gradle")
+
+二进制插件流程：1，建立插件工程  2，实现插件内部逻辑  3，发布与使用插件
+1，在项目根目录创建 buildSrc 文件夹，比如项目中的：
+├── buildSrc
+│   ├── build.gradle
+│   └── src
+│       └── main
+│            └── groovy
+│                  └── *.*.*.gradle
+│                      └── XxxPlugin.groovy
+│            └── resources
+│                  └── META-INF.gradle-plugins
+│                      └── *.*.*.properties  （implementation-class= XxxPlugin的全名）
+├── settings.gradle
+├── subprojecto-one
+│   └── build.gradle
+└── subproject-two
+    └── build.gradle
+2，实现插件中的 apply 方法
+3，发布插件到本地仓库
+//调用maven插件，用于发布
+apply plugin: 'maven-publish'
+publishing{
+    repositories {
+        maven {
+            //设置发布路径为 工程根目录下面的 repo 文件夹
+            url = "${rootProject.projectDir}/repo"
+        }
+    }
+    publications {
+        maven(MavenPublication){
+            //设置groupId，通常为包名
+            groupId = 'com.chenchen.router'
+            //设置artifactId，插件的名称
+            artifactId = 'router-gradle-plugin'
+            //插件的版本号
+            version = '1.0'
+
+            from components.java
+        }
+    }
+}
+//由于buildSrc中不能发布插件
+//使用: pwd  (print work directory) 命令查看当前目录
+//使用: cp -rf buildSrc router-gradle-plugin  拷贝buildSrc文件内容到router-gradle-plugin文件下，
+//调用: ./gradlew :router-gradle-plugin:publish  进行发布，生成repo文件夹
+
+
+实现gradle参数配置：
 1，定义Extension : 如：RouterExtension
 2，注册Extension  :在 RouterPlugin 中 project.getExtensions().create("router",RouterExtension)
 3，使用Extension : build.gradle(app)  中 调用 router{ wikiDir = "" }
 4，获取Extension : 在 RouterPlugin 中的 project.afterEvaluate 中可以拿到对应的值
-
-发布插件到本地仓库

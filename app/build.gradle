@@ -53,9 +53,3 @@ dependencies {
 println("我是 app-build.gradle 的代码")
 //使用脚本插件 other.gradle
 apply from: project.rootProject.file("other.gradle")
-
-//二进制插件流程：
-//1，建立插件工程  2，实现插件内部逻辑  3，发布与使用插件
-
-//页面路由开发功能：
-//1，标记页面    2，收集页面  3，生成文档  4，注册映射  5，打开页面
