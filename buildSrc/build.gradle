@@ -11,7 +11,7 @@ dependencies {
     implementation localGroovy()
 }
 //使用: pwd  (print work directory) 命令查看当前目录
-//使用: cp -rf buildSrc router-gradle-plugin  拷贝buildSrc文件内容到router-gradle-plugin文件下，
+//使用: cp -rf buildSrc router-gradle-plugin  拷贝buildSrc文件内容到router-gradle-plugin文件下，并且在settings.gradle 中增加：include ':router-gradle-plugin'
 //调用: ./gradlew :router-gradle-plugin:publish  进行发布
 //生成repo文件夹
 
