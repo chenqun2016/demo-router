@@ -18,4 +18,16 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.CLASS)
 public @interface Destination {
+
+    /**
+     * 当前页面的URL，不能为空
+     * @return 页面的URL
+     */
+    String url();
+
+    /**
+     * 对于当前页面的中文描述
+     * @return 例如"个人中心"
+     */
+    String destination();
 }
