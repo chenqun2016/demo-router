@@ -39,9 +39,9 @@ public class DestinationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
         // 避免多次调用 process
-//        if (roundEnvironment.processingOver()) {
-//            return false;
-//        }
+        if (roundEnvironment.processingOver()) {
+            return false;
+        }
         System.out.println(TAG + " >>> process start ...");
 
 
