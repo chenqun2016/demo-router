@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
     id 'com.chenchen.router'
 }
 //配置自定义Extension
@@ -44,7 +45,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
     implementation project(':router-annotations')
-    annotationProcessor project(':router-processor')
+    kapt project(':router-processor')
 }
 
 
