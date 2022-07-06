@@ -1,0 +1,63 @@
+// 使用maven插件中的发布功能
+apply plugin: 'maven'
+
+// 读取工程的配置
+Properties gradleProperties = new Properties()
+gradleProperties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+def VERSION_NAME = gradleProperties.getProperty("VERSION_NAME")
+def POM_URL = gradleProperties.getProperty("POM_URL")
+def GROUP_ID = gradleProperties.getProperty("GROUP_ID")
+// 读取项目的配置
+Properties projectGradleProperties = new Properties()
+projectGradleProperties.load(project.file('gradle.properties').newDataInputStream())
+def POM_ARTIFACT_ID = projectGradleProperties.getProperty("POM_ARTIFACT_ID")
+
+println("maven-publish VERSION_NAME = $VERSION_NAME")
+println("maven-publish POM_URL = $POM_URL")
+println("maven-publish GROUP_ID = $GROUP_ID")
+println("maven-publish POM_ARTIFACT_ID = $POM_ARTIFACT_ID")
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            // 填入发布信息
+            repository(url: uri(POM_URL)) {
+                pom.groupId = GROUP_ID
+                pom.artifactId = POM_ARTIFACT_ID
+                pom.version = VERSION_NAME
+            }
+            //router-processor项目中依赖依然使用本地项目的库，比如：
+            //      implementation project(':router-annotations')
+            // 发布时自动更改pom文件
+            pom.whenConfigured { pom ->
+                pom.dependencies.forEach { dep ->
+                    if (dep.getVersion() == "unspecified") {
+                        dep.setGroupId(GROUP_ID)
+                        dep.setVersion(VERSION_NAME)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//publishing{
+//    repositories {
+//        maven {
+//            //设置发布路径为 工程根目录下面的 repo 文件夹
+//            url = "${rootProject.projectDir}/repo"
+//        }
+//    }
+//    publications {
+//        maven(MavenPublication){
+//            //设置groupId，通常为包名
+//            groupId = 'com.chenchen.router'
+//            //设置artifactId，插件的名称
+//            artifactId = 'router-gradle-plugin'
+//            //插件的版本号
+//            version = '1.0'
+//
+//            from components.java
+//        }
+//    }
+//}

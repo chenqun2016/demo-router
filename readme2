@@ -16,3 +16,7 @@ RUNTIME： 注解信息将在运行期（Java虚拟机加载之后）也保留�
    或者使用  @AutoService(Processor.class)  自动注册处理器
 
 3，Android工程： 即我们的日常工程，需要依赖上述两者。在使用注解后，还要在第三方依赖中声明上述注解处理器，告知Java编译器需帮助我们收集注解并回调给该注解处理器。
+4, 注解工程发布：
+    使用 gradle.properties 文件保存配置信息
+    生成 ：maven-publish.gradle 文件
+    在子工程 build.gradle 中 ：apply from : rootProject.file("maven-publish.gradle")
