@@ -24,14 +24,10 @@ RUNTIME： 注解信息将在运行期（Java虚拟机加载之后）也保留�
 向注解处理器传递参数：
 1，在目标工程的 build.gradle(:app) 文件中加入
 android {
-    defaultConfig {
-        javaCompileOptions {
-            //给注解处理器中传入参数
-            kapt {
-                arguments {
-                    arg("key", "value")
-                }
-            }
+    //给注解处理器中传入参数
+    kapt {
+        arguments {
+            arg("key", "value")
         }
     }
 }
