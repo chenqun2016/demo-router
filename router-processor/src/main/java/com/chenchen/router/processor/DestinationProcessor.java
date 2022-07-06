@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -25,6 +26,13 @@ import javax.tools.JavaFileObject;
 public class DestinationProcessor extends AbstractProcessor {
 
     private static final String TAG = "DestinationProcessor";
+
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        //获取目标工程传入的参数
+        String value = processingEnv.getOptions().get("key");
+    }
 
     /**
      * 告诉编译器，当前处理器支持的注解类型

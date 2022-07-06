@@ -1,7 +1,6 @@
 页面路由开发功能：1，标记页面    2，收集页面  3，生成文档  4，注册映射  5，打开页面
 
 APT (Android Annotation Processor) android注解处理
-
 Java注解（Annotation），又可称为Java标注。它是一种注释机制，用于对类、方法、变量、参数和包等进行标注。
 注解，是给编译器看的。编译器可以在编译过程中，通过注解处理器（Annotation Processing Tool）将注解里面的信息收集起来，在编译过程中处理，或者是嵌入到最终字节码中，Java虚拟机在加载类的同时会加载这些注解的内容，供程序在运行时获取。
 
@@ -14,9 +13,30 @@ RUNTIME： 注解信息将在运行期（Java虚拟机加载之后）也保留�
 1，注解工程： 用于声明自定义注解
 2，注解处理器工程： 依赖注解工程，实现注解处理器，并通过META-INF中的配置，指定对应的实现类，供Java编译器查找。
    或者使用  @AutoService(Processor.class)  自动注册处理器
-
+   若工程使用了Kotlin，需要使用kapt来声明注解处理器，kapt会收集处理Kotlin和Java中所有注解；
+   需要注意的是，工程中若之前使用过 annotationProcessor，就需要全部替换为kapt关键字，二者不能混用，否则，使用annotationProcessor声明的那部分注解处理器将不会被回调（因为注解处理流程已经被kapt完全接管了）
 3，Android工程： 即我们的日常工程，需要依赖上述两者。在使用注解后，还要在第三方依赖中声明上述注解处理器，告知Java编译器需帮助我们收集注解并回调给该注解处理器。
 4, 注解工程发布：
     使用 gradle.properties 文件保存配置信息
     生成 ：maven-publish.gradle 文件
     在子工程 build.gradle 中 ：apply from : rootProject.file("maven-publish.gradle")
+
+向注解处理器传递参数：
+1，在目标工程的 build.gradle(:app) 文件中加入
+android {
+    defaultConfig {
+        javaCompileOptions {
+            //给注解处理器中传入参数
+            kapt {
+                arguments {
+                    arg("key", "value")
+                }
+            }
+        }
+    }
+}
+2，注解处理器工程中 String value = processingEnv.getOptions().get("key");
+
+
+生成文档:
+传递路径参数；生成json文件；汇总生成文档
