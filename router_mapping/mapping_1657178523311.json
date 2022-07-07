@@ -1,0 +1,1 @@
+[{"url":"router://page-home","description":"应用首页","realPath":"com.example.router.MainActivity"},{"url":"router://page-login","description":"登录页面","realPath":"com.example.router.LoginActivity"}]

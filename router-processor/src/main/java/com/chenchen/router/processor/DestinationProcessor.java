@@ -2,7 +2,13 @@ package com.chenchen.router.processor;
 
 import com.chenchen.router.annotations.Destination;
 import com.google.auto.service.AutoService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.Set;
@@ -30,8 +36,6 @@ public class DestinationProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        //获取目标工程传入的参数
-        String value = processingEnv.getOptions().get("key");
     }
 
     /**
@@ -54,6 +58,10 @@ public class DestinationProcessor extends AbstractProcessor {
         }
         System.out.println(TAG + " >>> process start ...");
 
+        //获取目标工程传入的参数
+        String rootDir = processingEnv.getOptions().get("root_project_dir");
+        System.out.println(TAG + " >>> process rootDir = " + rootDir);
+
         // 获取所有标记了 @Destination 注解的 类的信息
         Set<? extends Element> allDestinationElements = roundEnvironment.getElementsAnnotatedWith(Destination.class);
         System.out.println(TAG + " >>> all Destination elements count = " + allDestinationElements.size());
@@ -74,6 +82,8 @@ public class DestinationProcessor extends AbstractProcessor {
         builder.append("    public static Map<String, String> get() {\n");
         builder.append("        Map<String, String> mapping = new HashMap<>();\n");
 
+        final JsonArray destinationJsonArray = new JsonArray();
+
         // 遍历所有 @Destination 注解信息，挨个获取详细信息
         for(Element element :allDestinationElements){
             final TypeElement typeElement = (TypeElement) element;
@@ -85,9 +95,7 @@ public class DestinationProcessor extends AbstractProcessor {
             final String description = destination.destination();
             final String realPath = typeElement.getQualifiedName().toString();
 
-            System.out.println(TAG + " >>> url = " + url);
-            System.out.println(TAG + " >>> description = " + description);
-            System.out.println(TAG + " >>> realPath = " + realPath);
+            System.out.println(TAG + " >>> url = " + url+ " >>> description = " + description+ " >>> realPath = " + realPath);
 
             builder.append("        ")
                     .append("mapping.put(")
@@ -95,6 +103,12 @@ public class DestinationProcessor extends AbstractProcessor {
                     .append(", ")
                     .append("\"" + realPath + "\"")
                     .append(");\n");
+
+            JsonObject item = new JsonObject();
+            item.addProperty("url",url);
+            item.addProperty("description",description);
+            item.addProperty("realPath",realPath);
+            destinationJsonArray.add(item);
         }
         builder.append("        return mapping;\n");
         builder.append("    }\n");
@@ -113,6 +127,29 @@ public class DestinationProcessor extends AbstractProcessor {
             writer.close();
         }catch (Exception ex) {
             throw new RuntimeException("Error while create file", ex);
+        }
+
+        // 写入JSON到本地文件中
+        File rootDirFile = new File(rootDir);
+        // 检测父目录是否存在
+        if (!rootDirFile.exists()) {
+            throw new RuntimeException("root_project_dir not exist!");
+        }
+        // 创建 router_mapping 子目录 用于保存json内容
+        File routerFileDir = new File(rootDirFile,"router_mapping");
+        if (!routerFileDir.exists()) {
+            routerFileDir.mkdir();
+        }
+        File mappingFile = new File(routerFileDir, "mapping_" + System.currentTimeMillis() + ".json");
+        try {
+            //把json文件写入本地
+            BufferedWriter out = new BufferedWriter(new FileWriter(mappingFile));
+            String jsonStr = destinationJsonArray.toString();
+            out.write(jsonStr);
+            out.flush();
+            out.close();
+        } catch (Throwable throwable) {
+            throw new RuntimeException("Error while writing json", throwable);
         }
 
         System.out.println(TAG + " >>> process finish.");

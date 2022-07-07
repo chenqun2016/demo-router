@@ -35,4 +35,10 @@ android {
 
 
 生成文档:
-传递路径参数；生成json文件；汇总生成文档
+传递路径参数(可以在buildSrc 插件中实现自动传递)，如： kapt {
+                    arguments {
+                        arg("root_project_dir", rootProject.projectDir.absolutePath)
+                    }
+                }
+生成json文件,保存到 router_mapping 目录下。（可以在buildSrc插件中自动清理旧的文件）
+汇总生成文档,（在buildSrc 插件中实现,生成 页面文档.md）

@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    // 必须放在 'kotlin-kapt' 下面，因为插件里面会自动设置kapt的参数
     id 'com.chenchen.router'
 }
 //配置自定义Extension
@@ -34,6 +35,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    //给注解处理器中传入参数
+//    kapt {
+//        arguments {
+//            arg("root_project_dir", rootProject.projectDir.absolutePath)
+//        }
+//    }
 }
 
 dependencies {
