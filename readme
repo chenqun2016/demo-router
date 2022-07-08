@@ -60,3 +60,9 @@ publishing{
 2，注册Extension  :在 RouterPlugin 中 project.getExtensions().create("router",RouterExtension)
 3，使用Extension : build.gradle(app)  中 调用 router{ wikiDir = "" }
 4，获取Extension : 在 RouterPlugin 中的 project.afterEvaluate 中可以拿到对应的值
+
+Transform实现功能：把所有子工程的RouterMapping_文件 汇总生成总映射表:
+Transform是来自于android gradle插件中的接口，需要注册在自定义插件中的，在buildSrc中添加 google()仓库，并引用 implementation 'com.android.tools.build:gradle:3.5.0'
+步骤：
+1，创建 RouterMappingTransform 文件；
+2，在插件 RouterPlugin 中引用transform文件

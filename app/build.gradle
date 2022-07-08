@@ -20,6 +20,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -34,6 +35,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    dexOptions{
+        javaMaxHeapSize "4g"
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
     }
 
     //给注解处理器中传入参数

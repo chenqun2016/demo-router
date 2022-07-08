@@ -4,11 +4,13 @@ apply plugin: 'groovy'
 //声明仓库的地址,用来下载第三方包
 repositories {
     mavenCentral()
+    google()
 }
 //指定使用三方包
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:4.1.2'
 }
 //使用: pwd  (print work directory) 命令查看当前目录
 //使用: cp -rf buildSrc router-gradle-plugin  拷贝buildSrc文件内容到router-gradle-plugin文件下，
