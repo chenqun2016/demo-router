@@ -1,11 +1,15 @@
 package com.chenchen.router.gradle
 
+import com.android.build.api.transform.Format
 import com.android.build.api.transform.QualifiedContent
 import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformException
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.android.utils.FileUtils
+
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipEntry
 
 class RouterMappingTransform extends Transform {
 
@@ -59,7 +63,9 @@ class RouterMappingTransform extends Transform {
             throws TransformException, InterruptedException, IOException {
         // 1. 遍历所有的Input
         // 2. 对Input进行二次处理
-        // 3. 将Input拷贝到目标目录(此步骤是必须的，否则返回的字节码是空的)
+        // 3. 将Input拷贝到目标目录
+
+        RouterMappingCollector collector = new RouterMappingCollector()
 
         // 遍历所有的输入
         transformInvocation.inputs.each {
@@ -72,6 +78,7 @@ class RouterMappingTransform extends Transform {
                                 directoryInput.contentTypes,
                                 directoryInput.scopes,
                                 Format.DIRECTORY)
+                collector.collect(directoryInput.file)
                 FileUtils.copyDirectory(directoryInput.file, destDir)
             }
 
@@ -82,8 +89,43 @@ class RouterMappingTransform extends Transform {
                                 jarInput.name,
                                 jarInput.contentTypes,
                                 jarInput.scopes, Format.JAR)
+                collector.collectFromJarFile(jarInput.file)
                 FileUtils.copyFile(jarInput.file, dest)
             }
         }
+
+        println("${getName()} all mapping class name = "
+                + collector.mappingClassName)
+
+        File mappingJarFile = transformInvocation.outputProvider.
+                getContentLocation(
+                        "router_mapping",
+                        getOutputTypes(),
+                        getScopes(),
+                        Format.JAR)
+
+        println("${getName()}  mappingJarFile = $mappingJarFile")
+
+        if (mappingJarFile.getParentFile().exists()) {
+            mappingJarFile.getParentFile().mkdirs()
+        }
+
+        if (mappingJarFile.exists()) {
+            mappingJarFile.delete()
+        }
+
+//        // 将生成的字节码，写入本地文件
+//        FileOutputStream fos = new FileOutputStream(mappingJarFile)
+//        JarOutputStream jarOutputStream = new JarOutputStream(fos)
+//        ZipEntry zipEntry =
+//                new ZipEntry(RouterMappingByteCodeBuilder.CLASS_NAME + ".class")
+//        jarOutputStream.putNextEntry(zipEntry)
+//        jarOutputStream.write(
+//                RouterMappingByteCodeBuilder.get(collector.mappingClassName))
+//        jarOutputStream.closeEntry()
+//        jarOutputStream.close()
+//        fos.close()
+
+        println("${getName()}  finished")
     }
 }
