@@ -106,7 +106,7 @@ class RouterMappingTransform extends Transform {
 
         println("${getName()}  mappingJarFile = $mappingJarFile")
 
-        if (mappingJarFile.getParentFile().exists()) {
+        if (!mappingJarFile.getParentFile().exists()) {
             mappingJarFile.getParentFile().mkdirs()
         }
 
@@ -114,17 +114,17 @@ class RouterMappingTransform extends Transform {
             mappingJarFile.delete()
         }
 
-//        // 将生成的字节码，写入本地文件
-//        FileOutputStream fos = new FileOutputStream(mappingJarFile)
-//        JarOutputStream jarOutputStream = new JarOutputStream(fos)
-//        ZipEntry zipEntry =
-//                new ZipEntry(RouterMappingByteCodeBuilder.CLASS_NAME + ".class")
-//        jarOutputStream.putNextEntry(zipEntry)
-//        jarOutputStream.write(
-//                RouterMappingByteCodeBuilder.get(collector.mappingClassName))
-//        jarOutputStream.closeEntry()
-//        jarOutputStream.close()
-//        fos.close()
+        // 将生成的字节码，写入本地文件
+        FileOutputStream fos = new FileOutputStream(mappingJarFile)
+        JarOutputStream jarOutputStream = new JarOutputStream(fos)
+        ZipEntry zipEntry =
+                new ZipEntry(RouterMappingASMBuilder.CLASS_NAME + ".class")
+        jarOutputStream.putNextEntry(zipEntry)
+        jarOutputStream.write(
+                RouterMappingASMBuilder.get(collector.mappingClassName))
+        jarOutputStream.closeEntry()
+        jarOutputStream.close()
+        fos.close()
 
         println("${getName()}  finished")
     }

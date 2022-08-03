@@ -5,7 +5,7 @@ import java.util.jar.JarFile
 
 class RouterMappingCollector {
 
-    private static final String PACKAGE_NAME = 'com/imooc/router/mapping'
+    private static final String PACKAGE_NAME = 'com/example/router/mapping'
     private static final String CLASS_NAME_PREFIX = 'RouterMapping_'
     private static final String CLASS_FILE_SUFFIX = '.class'
 

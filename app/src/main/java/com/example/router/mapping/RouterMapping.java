@@ -7,8 +7,9 @@ public class RouterMapping {
 
     public static Map<String,String> get(){
         Map<String,String> map = new HashMap<>();
-        map.put("router://page-kotlin", "com.*.router.demo.KtMainActivity");
-        map.put("router://page-home", "com.*.router.demo.MainActivity");
+        map.putAll(RouterMapping_1.get());
+        map.putAll(RouterMapping_2.get());
+
         return map;
     }
 }
