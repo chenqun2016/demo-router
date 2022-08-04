@@ -34,6 +34,8 @@ android {
 2，注解处理器工程中 String value = processingEnv.getOptions().get("key");
 
 
+
+
 生成文档:
 传递路径参数(可以在buildSrc 插件中实现自动传递)，如： kapt {
                     arguments {
@@ -42,3 +44,30 @@ android {
                 }
 生成json文件,保存到 router_mapping 目录下。（可以在buildSrc插件中自动清理旧的文件）
 汇总生成文档,（在buildSrc 插件中实现,生成 页面文档.md）
+
+
+
+
+
+注册映射：
+在 RouterPlugin 中 注册 RouterMappingTransform；
+通过Android官方已经提供了Transform API（https://google.github.io/android-gradle-dsl/javadoc/3.4/com/android/build/api/transform/Transform.html）
+，ASM等技术 插入映射表代码到包中
+
+
+
+
+
+打开页面
+通过 Router.init  获取上一步自动生成文件的map，并保存。
+通过 Router.go  跳转页面
+
+
+
+
+
+发布router-runtime 为aar文件:
+build.gradle 文件中添加：apply from : rootProject.file("maven-publish.gradle")
+添加 gradle.properties 文件
+clean 项目
+运行： ./gradlew :router-runtime:uploadArchive

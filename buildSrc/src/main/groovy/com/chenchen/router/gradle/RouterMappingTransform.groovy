@@ -11,6 +11,9 @@ import com.android.utils.FileUtils
 import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
 
+/**
+ * 字节码插桩 实现类
+ */
 class RouterMappingTransform extends Transform {
 
     /**
@@ -106,7 +109,7 @@ class RouterMappingTransform extends Transform {
 
         println("${getName()}  mappingJarFile = $mappingJarFile")
 
-        if (!mappingJarFile.getParentFile().exists()) {
+        if (mappingJarFile.getParentFile().exists()) {
             mappingJarFile.getParentFile().mkdirs()
         }
 
@@ -114,7 +117,7 @@ class RouterMappingTransform extends Transform {
             mappingJarFile.delete()
         }
 
-        // 将生成的字节码，写入本地文件
+        // 将生成的字节码，写入本地文件,可以在apk里面查看写入的文件
         FileOutputStream fos = new FileOutputStream(mappingJarFile)
         JarOutputStream jarOutputStream = new JarOutputStream(fos)
         ZipEntry zipEntry =

@@ -4,6 +4,10 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
+/**
+ * 字节码处理类，用于生成想要的类；
+ * 使用ASMPlugin 辅助开发
+ */
 class RouterMappingASMBuilder implements Opcodes {
     public static final String CLASS_NAME =
             "com/example/router/mapping/generated/RouterMapping"
@@ -18,7 +22,7 @@ class RouterMappingASMBuilder implements Opcodes {
 
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS)
 
-        cw.visit(V1_7,
+        cw.visit(V1_8,
                 ACC_PUBLIC + ACC_SUPER,
                 CLASS_NAME,
                 null,
@@ -64,7 +68,7 @@ class RouterMappingASMBuilder implements Opcodes {
 
             mv.visitVarInsn(ALOAD, 0)
             mv.visitMethodInsn(INVOKESTATIC,
-                    "com/imooc/router/mapping/$it",
+                    "com/example/router/mapping/$it",
                     "get", "()Ljava/util/Map;", false)
             mv.visitMethodInsn(INVOKEINTERFACE,
                     "java/util/Map",
